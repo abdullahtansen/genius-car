@@ -49,7 +49,14 @@ async function run(){
         })
 
         app.get('/services',async (req,res)=>{
-            const query = {};
+            const search = req.query.search;
+            let query = {};
+            if(search.length){
+               query = { $text:{
+                $search: search
+            } 
+          }
+      }
             const order = req.query.order === 'asc' ? 1 : -1;
             const cursor = serviceCollection.find(query).sort({price: order});
             const result = await cursor.toArray();
